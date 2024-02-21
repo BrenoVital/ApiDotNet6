@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,7 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MP.ApiDotNet6.Api\MP.ApiDotNet6.Api.csproj" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MP.ApiDotNet6.Application\MP.ApiDotNet6.Application.csproj" />
     <ProjectReference Include="..\MP.ApiDotNet6.Domain\MP.ApiDotNet6.Domain.csproj" />
     <ProjectReference Include="..\MP.ApiDotNet6.Infra.Data\MP.ApiDotNet6.Infra.Data.csproj" />
   </ItemGroup>
