@@ -38,6 +38,17 @@ namespace MP.ApiDotNet6.Application.Services
             purchase.Id = data.Id;
             return ResultService.Ok(purchase);
         }
+
+        public async Task<ResultService<PurchaseDTO>> Delete(int id)
+        {
+            var purchase = await _purchaseRepository.GetById(id);
+            if (purchase == null)
+                return ResultService.Fail<PurchaseDTO>("Compra não encontrada");
+
+            await _purchaseRepository.Delete(purchase);
+            return (ResultService<PurchaseDTO>)ResultService.Ok("Compra deletada");
+        }
+
         public async Task<ResultService<ICollection<PurchaseDetailDTO>>> GetAll()
         {
             var purchases = await _purchaseRepository.GetAll();
@@ -50,6 +61,26 @@ namespace MP.ApiDotNet6.Application.Services
                 return ResultService.Fail<PurchaseDetailDTO>("Compra não encontrada");
            
             return ResultService.Ok(_mapper.Map<PurchaseDetailDTO>(purchase));
+        }
+        public async Task<ResultService<PurchaseDTO>> Update(PurchaseDTO purchase)
+        {
+            if(purchase == null)
+                return ResultService.Fail<PurchaseDTO>("Objeto deve ser informado");
+
+            var validate = new PurchaseDTOValidator().Validate(purchase);
+            if (!validate.IsValid)
+                return ResultService.RequestError<PurchaseDTO>("Problemas de validação", validate);
+
+            var result = await _purchaseRepository.GetById(purchase.Id);
+            if (result == null)
+                return ResultService.Fail<PurchaseDTO>("Compra não encontrada");
+
+            var productId = await _productRepository.GetByCodErp(purchase.CodErp);
+            var personId = await _personRepository.GetByDocument(purchase.Document);
+            result.Edit(purchase.Id, productId, personId);
+            await _purchaseRepository.Update(result);
+            return ResultService.Ok(purchase);
+
         }
     }
 }

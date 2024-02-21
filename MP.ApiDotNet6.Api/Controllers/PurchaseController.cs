@@ -67,5 +67,52 @@ namespace MP.ApiDotNet6.Api.Controllers
                 return BadRequest(result);
             }
         }
+
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<ActionResult> Put([FromBody] PurchaseDTO purchaseDTO)
+        {
+            try
+            {
+                var result = await _purchaseService.Update(purchaseDTO);
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var result = ResultService.Fail<PurchaseDTO>(ex.Message);
+                return BadRequest(result);
+            }
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                var result = await _purchaseService.Delete(id);
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                var result = ResultService.Fail<PurchaseDTO>(ex.Message);
+                return BadRequest(result);
+            }
+        }   
     }
 }

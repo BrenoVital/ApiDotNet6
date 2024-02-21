@@ -27,12 +27,6 @@ namespace MP.ApiDotNet6.Infra.Data.Repositories
             return purchase;
         }
 
-        public async Task Update(Purchase purchase)
-        {
-            _db.Update(purchase);
-            await _db.SaveChangesAsync();
-        }
-
         public async Task<Purchase> GetById(int id)
         {
             return await _db.Purchases.Include(p => p.Person).Include(p => p.Product).FirstOrDefaultAsync(p => p.Id == id);
@@ -53,6 +47,11 @@ namespace MP.ApiDotNet6.Infra.Data.Repositories
             return await _db.Purchases.Include(p => p.Product).Include(p => p.Person).Where(p => p.ProductId == productId).ToListAsync();
         }
 
-
+        public async Task<Purchase> Update(Purchase purchase)
+        {
+            _db.Update(purchase);
+            await _db.SaveChangesAsync();
+            return purchase;
+        }
     }
 }
